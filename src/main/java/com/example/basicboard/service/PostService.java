@@ -2,7 +2,6 @@ package com.example.basicboard.service;
 
 import com.example.basicboard.advice.exception.CPostNotFoundException;
 import com.example.basicboard.dto.PostRequestDto;
-import com.example.basicboard.dto.PostUpdateDto;
 import com.example.basicboard.models.Post;
 import com.example.basicboard.repository.PostRepository;
 import com.sun.istack.NotNull;
@@ -35,9 +34,9 @@ public class PostService {
         return post.getId();
     }
 
-    public Long updatePost(@NotNull long postId, @NotNull PostUpdateDto postUpdateDto){
+    public Long updatePost(@NotNull long postId, @NotNull PostRequestDto postRequestDto){
         Post post = postRepository.findById(postId).orElseThrow(CPostNotFoundException::new);
-        post.update(postUpdateDto);
+        post.update(postRequestDto);
         postRepository.save(post);
         return post.getId();
     }

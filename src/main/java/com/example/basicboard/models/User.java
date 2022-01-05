@@ -29,4 +29,10 @@ public class User extends TimeStamped{
 
     @Column(nullable = true)
     private Long kakaoId;
+
+    public User(String userId, String password, UserRole role){
+        this.userId = userId;
+        this.password = password;
+        this.role = role;
+    }
 }

@@ -5,13 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class PostUpdateDto {
-    private String title;
-    private String content;
+public class SignupRequestDto {
+    private String userId;
+    private String password;
+    private boolean admin;
+    private String adminToken;
+
 }
 

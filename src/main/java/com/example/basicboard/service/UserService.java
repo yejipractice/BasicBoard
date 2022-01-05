@@ -1,4 +1,51 @@
 package com.example.basicboard.service;
 
+import com.example.basicboard.advice.exception.CAccountExistedException;
+import com.example.basicboard.advice.exception.CAdminTokenException;
+import com.example.basicboard.advice.exception.CSigninFailedException;
+import com.example.basicboard.dto.SignupRequestDto;
+import com.example.basicboard.models.User;
+import com.example.basicboard.models.UserRole;
+import com.example.basicboard.repository.UserRepository;
+import com.example.basicboard.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
 public class UserService {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
+
+    public String  signin(String id, String password) {
+        User user = userRepository.findByUserId(id).orElseThrow(CSigninFailedException::new);
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new CSigninFailedException();
+        }
+        return jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
+    }
+
+    public User signup(SignupRequestDto signupRequestDto){
+        Optional<User> found = userRepository.findByUserId(signupRequestDto.getUserId());
+        if(found.isPresent()){
+            throw new CAccountExistedException();
+        }
+        String encodedPw = passwordEncoder.encode(signupRequestDto.getPassword());
+        UserRole role = UserRole.USER;
+        if(signupRequestDto.isAdmin()){
+            if(!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)){
+                throw new CAdminTokenException();
+            }
+            role = UserRole.ADMIN;
+        }
+
+        User user = new User(signupRequestDto.getUserId(), encodedPw, role);
+        return userRepository.save(user);
+    }
 }

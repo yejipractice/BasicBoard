@@ -1,7 +1,6 @@
 package com.example.basicboard.controller;
 
 import com.example.basicboard.dto.PostRequestDto;
-import com.example.basicboard.dto.PostUpdateDto;
 import com.example.basicboard.models.Post;
 import com.example.basicboard.models.response.CommonResult;
 import com.example.basicboard.models.response.ListResult;
@@ -15,8 +14,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Api(tags = {"1. 게시글 컨트롤러"})
@@ -78,8 +75,8 @@ public class PostController {
             @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
     })
     @PutMapping("/post/{postId}")
-    public CommonResult updatePost(@PathVariable("postId") long id, @RequestBody PostUpdateDto postUpdateDto){
-        postService.updatePost(id, postUpdateDto);
+    public CommonResult updatePost(@PathVariable("postId") long id, @RequestBody PostRequestDto postRequestDto){
+        postService.updatePost(id, postRequestDto);
         return responseService.getSuccessResult();
     }
 

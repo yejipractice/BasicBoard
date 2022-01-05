@@ -1,7 +1,6 @@
 package com.example.basicboard.models;
 
 import com.example.basicboard.dto.PostRequestDto;
-import com.example.basicboard.dto.PostUpdateDto;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,12 +30,11 @@ public class Post extends TimeStamped{
     public Post(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
-        this.nickName = postRequestDto.getNickName();
     }
 
-    public long update(@NotNull PostUpdateDto postUpdateDto){
-        this.title = postUpdateDto.getTitle();
-        this.content = postUpdateDto.getContent();
+    public long update(@NotNull PostRequestDto postRequestDto){
+        this.title = postRequestDto.getTitle();
+        this.content = postRequestDto.getContent();
         return id;
     }
 

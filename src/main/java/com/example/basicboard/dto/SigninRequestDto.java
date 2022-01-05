@@ -7,9 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class PostRequestDto {
-    private String title;
-    private String content;
+@AllArgsConstructor
+public class SigninRequestDto {
+    private String userId;
+    private String password;
 }

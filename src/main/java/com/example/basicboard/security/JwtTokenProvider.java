@@ -1,5 +1,6 @@
 package com.example.basicboard.security;
 
+import com.example.basicboard.models.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -33,9 +34,9 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, UserRole role) {
         Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("role", roles);
+        claims.put("role", String.valueOf(role));
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
