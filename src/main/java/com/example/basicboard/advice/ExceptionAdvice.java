@@ -25,7 +25,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(CUserNotFoundException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult userNotFoundException(HttpServletRequest request, Exception e){
-        return responseService.getFailResultWithMsg("해당 계정이 존재하지 않습니다.");
+        return responseService.getFailResultWithMsg("해당 계정이 존재하지 않거나 잘못된 계정입니다.");
     }
 
     @ExceptionHandler(CPostNotFoundException.class)
@@ -50,5 +50,11 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult adminTokenNotMatchedException(HttpServletRequest request, Exception e){
         return responseService.getFailResultWithMsg("관리자 암호가 옳지 않습니다.");
+    }
+
+    @ExceptionHandler(CNotPostUserException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult postUserNotMatchedException(HttpServletRequest request, Exception e){
+        return responseService.getFailResultWithMsg("해당 게시글의 작성자가 아닙니다.");
     }
 }

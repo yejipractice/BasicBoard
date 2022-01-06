@@ -27,9 +27,10 @@ public class Post extends TimeStamped{
     @ManyToOne
     private User user;
 
-    public Post(PostRequestDto postRequestDto){
+    public Post(PostRequestDto postRequestDto, User user){
         this.title = postRequestDto.getTitle();
         this.content = postRequestDto.getContent();
+        this.user = user;
     }
 
     public long update(@NotNull PostRequestDto postRequestDto){
