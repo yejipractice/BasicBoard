@@ -35,4 +35,9 @@ public class User extends TimeStamped{
         this.password = password;
         this.role = role;
     }
+
+    public void update(String userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
 }

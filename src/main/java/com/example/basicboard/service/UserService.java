@@ -3,6 +3,8 @@ package com.example.basicboard.service;
 import com.example.basicboard.advice.exception.CAccountExistedException;
 import com.example.basicboard.advice.exception.CAdminTokenException;
 import com.example.basicboard.advice.exception.CSigninFailedException;
+import com.example.basicboard.advice.exception.CUserNotFoundException;
+import com.example.basicboard.dto.SigninRequestDto;
 import com.example.basicboard.dto.SignupRequestDto;
 import com.example.basicboard.models.User;
 import com.example.basicboard.models.UserRole;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,4 +51,23 @@ public class UserService {
         User user = new User(signupRequestDto.getUserId(), encodedPw, role);
         return userRepository.save(user);
     }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUser(String id) {
+        return userRepository.findByUserId(id).orElseThrow(CUserNotFoundException::new);
+    }
+
+    public void modifyUser(long id, SigninRequestDto signinRequestDto) {
+        User user = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
+        user.update(signinRequestDto.getUserId(), signinRequestDto.getPassword());
+    }
+
+    public void deleteUser(long id){
+        User user = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
+        userRepository.delete(user);
+    }
+
 }

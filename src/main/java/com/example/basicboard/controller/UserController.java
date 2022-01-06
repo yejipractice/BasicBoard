@@ -1,36 +1,95 @@
 package com.example.basicboard.controller;
 
 import com.example.basicboard.dto.SigninRequestDto;
-import com.example.basicboard.dto.SignupRequestDto;
 import com.example.basicboard.models.User;
 import com.example.basicboard.models.response.CommonResult;
+import com.example.basicboard.models.response.ListResult;
 import com.example.basicboard.models.response.SingleResult;
+import com.example.basicboard.repository.UserRepository;
 import com.example.basicboard.service.ResponseService;
 import com.example.basicboard.service.UserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = {"2. 사용자 컨트롤러"})
 @RequiredArgsConstructor
 public class UserController {
+    private UserRepository userRepository;
+    private ResponseService responseService;
+    private UserService userService;
 
-    private final UserService userService;
-    private final ResponseService responseService;
-
-    @ApiOperation(value = "로그인", notes = "로그인을 한다.")
-    @PostMapping("/user/signin")
-    public SingleResult<String> signIn(@RequestBody SigninRequestDto signinRequestDto) {
-        String token = userService.signin(signinRequestDto.getUserId(), signinRequestDto.getPassword());
-        System.out.println(token);
-        return responseService.getSingleResult(token);
+    @Secured("ROLE_ADMIN")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK !!"),
+            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+    })
+    @ApiOperation(value = "회원 리스트 조회", notes = "모든 회원을 조회한다.")
+    @GetMapping("/users")
+    public ListResult<User> findAllUsers() {
+        return responseService.getListResult(userService.getAllUsers());
     }
 
-    @ApiOperation(value = "회원가입", notes = "회원가입을 한다.")
-    @PostMapping("/user/signup")
-    public CommonResult signUp(@RequestBody SignupRequestDto signupRequestDto) {
-        User user = userService.signup(signupRequestDto);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK !!"),
+            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+    })
+    @ApiOperation(value = "회원 정보 조회", notes = "회원 정보를 조회한다.")
+    @GetMapping("/user")
+    public SingleResult<User> findUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String id = authentication.getName();
+        return responseService.getSingleResult(userService.getUser(id));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK !!"),
+            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+    })
+    @ApiOperation(value = "회원 수정", notes = "회원정보를 수정한다")
+    @PutMapping(value = "/user")
+    public CommonResult modifyUser(
+            @ApiParam(value = "회원 번호", required = true) @RequestParam long id,
+            @ApiParam(value = "회원 정보", required = true) @RequestBody SigninRequestDto signinRequestDto
+            ) {
+            userService.modifyUser(id, signinRequestDto);
+            return responseService.getSuccessResult();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK !!"),
+            @ApiResponse(code = 400, message = "BAD REQUEST !!"),
+            @ApiResponse(code = 404, message = "NOT FOUND !!"),
+            @ApiResponse(code = 500, message = "INTERNAL SERVER ERROR !!")
+    })
+    @ApiOperation(value = "회원 삭제", notes = "userId로 회원정보를 삭제한다")
+    @DeleteMapping(value = "/user")
+    public CommonResult deleteUser (@ApiParam(value = "회원 번호", required = true) @RequestParam long id) {
+        userService.deleteUser(id);
         return responseService.getSuccessResult();
     }
+
 
 }
