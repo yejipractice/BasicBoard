@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.file.AccessDeniedException;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -56,5 +57,23 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult postUserNotMatchedException(HttpServletRequest request, Exception e){
         return responseService.getFailResultWithMsg("해당 게시글의 작성자가 아닙니다.");
+    }
+
+    @ExceptionHandler(CAuthenticationEntryPointException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult authenticationEntryPointException(HttpServletRequest request, Exception e){
+        return responseService.getFailResultWithMsg("해당 리소스에 접근하기 위한 권한이 없습니다.");
+    }
+
+    @ExceptionHandler(CAccessDeniedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult accessDeniedException(HttpServletRequest request, Exception e){
+        return responseService.getFailResultWithMsg("보유한 권한으로 접근할 수 없는 리소스입니다.");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult accessDeniedException2(HttpServletRequest request, Exception e){
+        return responseService.getFailResultWithMsg("보유한 권한으로 접근할 수 없는 리소스입니다.");
     }
 }

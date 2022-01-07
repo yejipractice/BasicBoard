@@ -11,6 +11,7 @@ import com.example.basicboard.service.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = {"2. 사용자 컨트롤러"})
 @RequiredArgsConstructor
 public class UserController {
-    private UserRepository userRepository;
-    private ResponseService responseService;
-    private UserService userService;
+    private final UserRepository userRepository;
+    private final ResponseService responseService;
+    private final UserService userService;
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })

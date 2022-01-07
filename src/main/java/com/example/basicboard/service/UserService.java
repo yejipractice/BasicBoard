@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ public class UserService {
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new CSigninFailedException();
         }
-        return jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
+        return jwtTokenProvider.createToken(user.getUserId(), user.getRole());
     }
 
     public User signup(SignupRequestDto signupRequestDto){
@@ -61,8 +62,10 @@ public class UserService {
     }
 
     public void modifyUser(long id, SigninRequestDto signinRequestDto) {
+        String encodedPw = passwordEncoder.encode(signinRequestDto.getPassword());
         User user = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
-        user.update(signinRequestDto.getUserId(), signinRequestDto.getPassword());
+        user.update(signinRequestDto.getUserId(), encodedPw);
+        userRepository.save(user);
     }
 
     public void deleteUser(long id){
