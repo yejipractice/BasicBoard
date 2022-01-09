@@ -38,7 +38,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(CPostNotFoundException::new);
         User writer = post.getUser();
         User user = userRepository.findByUserId(userId).orElseThrow(CUserNotFoundException::new);
-        if(!writer.equals(user)){
+        if(!writer.getUserId().equals(user.getUserId())){
             throw new CPostNotFoundException();
         }
         return post;
@@ -55,7 +55,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(CPostNotFoundException::new);
         User user = userRepository.findByUserId(userId).orElseThrow(CUserNotFoundException::new);
         User writer = post.getUser();
-        if(!writer.equals(user)){
+        if(!writer.getUserId().equals(user.getUserId())){ // 객체로 비교하면 안된다. (user==writer? x)
             throw new CPostNotFoundException();
         }
         post.update(postRequestDto);
@@ -67,7 +67,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(CPostNotFoundException::new);
         User writer = post.getUser();
         User user = userRepository.findByUserId(userId).orElseThrow(CUserNotFoundException::new);
-        if(!writer.equals(user)){
+        if(!writer.getUserId().equals(user.getUserId())){
             throw new CPostNotFoundException();
         }
         postRepository.delete(post);
