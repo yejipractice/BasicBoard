@@ -6,6 +6,7 @@ import com.example.basicboard.advice.exception.CSigninFailedException;
 import com.example.basicboard.advice.exception.CUserNotFoundException;
 import com.example.basicboard.dto.SigninRequestDto;
 import com.example.basicboard.dto.SignupRequestDto;
+import com.example.basicboard.dto.UserResponseDto;
 import com.example.basicboard.models.User;
 import com.example.basicboard.models.UserRole;
 import com.example.basicboard.repository.UserRepository;
@@ -57,8 +58,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(String id) {
-        return userRepository.findByUserId(id).orElseThrow(CUserNotFoundException::new);
+    public UserResponseDto getUser(String id) {
+        User user = userRepository.findByUserId(id).orElseThrow(CUserNotFoundException::new);
+        return new UserResponseDto(user);
     }
 
     public void modifyUser(long id, SigninRequestDto signinRequestDto) {

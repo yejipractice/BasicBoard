@@ -1,6 +1,7 @@
 package com.example.basicboard.controller;
 
 import com.example.basicboard.dto.SigninRequestDto;
+import com.example.basicboard.dto.UserResponseDto;
 import com.example.basicboard.models.User;
 import com.example.basicboard.models.response.CommonResult;
 import com.example.basicboard.models.response.ListResult;
@@ -51,7 +52,7 @@ public class UserController {
     })
     @ApiOperation(value = "회원 정보 조회", notes = "회원 정보를 조회한다.")
     @GetMapping("/user")
-    public SingleResult<User> findUser() {
+    public SingleResult<UserResponseDto> findUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String id = authentication.getName();
         return responseService.getSingleResult(userService.getUser(id));

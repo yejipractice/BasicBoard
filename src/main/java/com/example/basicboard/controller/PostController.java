@@ -1,6 +1,7 @@
 package com.example.basicboard.controller;
 
 import com.example.basicboard.dto.PostRequestDto;
+import com.example.basicboard.dto.PostResponseDto;
 import com.example.basicboard.models.Post;
 import com.example.basicboard.models.response.CommonResult;
 import com.example.basicboard.models.response.ListResult;
@@ -62,7 +63,7 @@ public class PostController {
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
     @GetMapping("/posts")
-    public ListResult<Post> getUsersPosts() {
+    public ListResult<PostResponseDto> getUsersPosts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return responseService.getListResult(postService.getUserPosts(userId));
@@ -79,7 +80,7 @@ public class PostController {
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
     @GetMapping("/post/{postId}")
-    public SingleResult<Post> getPost(@PathVariable("postId") long id) {
+    public SingleResult<PostResponseDto> getPost(@PathVariable("postId") long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
         return responseService.getSingleResult(postService.getPost(id, userId));

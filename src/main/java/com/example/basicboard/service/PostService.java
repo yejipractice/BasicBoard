@@ -3,6 +3,7 @@ package com.example.basicboard.service;
 import com.example.basicboard.advice.exception.CPostNotFoundException;
 import com.example.basicboard.advice.exception.CUserNotFoundException;
 import com.example.basicboard.dto.PostRequestDto;
+import com.example.basicboard.dto.PostResponseDto;
 import com.example.basicboard.models.Post;
 import com.example.basicboard.models.User;
 import com.example.basicboard.repository.PostRepository;
@@ -29,19 +30,24 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public List<Post> getUserPosts(String userId) {
+    public List<PostResponseDto> getUserPosts(String userId) {
         User user = userRepository.findByUserId(userId).orElseThrow(CUserNotFoundException::new);
-        return postRepository.findAllByUser(user);
+        List<Post> posts = postRepository.findAllByUser(user);
+        List<PostResponseDto> responseDtoList = new ArrayList<>();
+        for(Post post : posts){
+            responseDtoList.add(new PostResponseDto(post));
+        }
+        return responseDtoList;
     }
 
-    public Post getPost(@NotNull long postId, String userId) {
+    public PostResponseDto getPost(@NotNull long postId, String userId) {
         Post post = postRepository.findById(postId).orElseThrow(CPostNotFoundException::new);
         User writer = post.getUser();
         User user = userRepository.findByUserId(userId).orElseThrow(CUserNotFoundException::new);
         if(!writer.getUserId().equals(user.getUserId())){
             throw new CPostNotFoundException();
         }
-        return post;
+        return new PostResponseDto(post);
     }
 
     public Long createPost(@NotNull PostRequestDto postRequestDto, String userId){
