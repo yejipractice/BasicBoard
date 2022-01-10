@@ -44,6 +44,13 @@ public class User extends TimeStamped implements UserDetails {
         this.role = role;
     }
 
+    public User(String userId, String password, UserRole role, Long kakaoId){
+        this.userId = userId;
+        this.password = password;
+        this.role = role;
+        this.kakaoId = kakaoId;
+    }
+
     public void update(String userId, String password) {
         this.userId = userId;
         this.password = password;
