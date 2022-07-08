@@ -2,13 +2,11 @@ package com.example.basicboard.dto;
 
 import com.example.basicboard.models.User;
 import com.example.basicboard.models.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserResponseDto {

@@ -14,6 +14,7 @@ import com.example.basicboard.security.JwtTokenProvider;
 import com.example.basicboard.security.kakao.KakaoOAuth2;
 import com.example.basicboard.security.kakao.KakaoUserInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.json.JSONException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Setter
 @RequiredArgsConstructor
 public class UserService {
 
@@ -99,9 +101,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(long id){
+    public long deleteUser(long id){
         User user = userRepository.findById(id).orElseThrow(CUserNotFoundException::new);
         userRepository.delete(user);
+        return id;
     }
 
 }
